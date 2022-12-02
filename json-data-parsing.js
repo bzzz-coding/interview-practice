@@ -33,9 +33,10 @@ const json = {
 }
 
 
-// Pass in id of response, return an array of [question, answer] pairs from the entry
+
+// Pass in id of response, return an object with questionId: [question heading, answer text] pairs from the entry
 function getQuestionAndResponse(id) {
-  let response = []
+  let response = {}
   for (const res of json.responses) { // Loop through all responses
     // [questionHeading, answerText] will be pushed to response for each entry
     let qHeading, aText;
@@ -69,7 +70,7 @@ function getQuestionAndResponse(id) {
         }
 
         // push [question heading, answer text] to response
-        response.push([qHeading, aText])
+        response[qId] = [qHeading, aText]
       }
     }
   }
