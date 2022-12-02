@@ -33,40 +33,45 @@ const json = {
 }
 
 
-// id of response
+// Pass in id of response, return an array of [question, answer] pairs from the entry
 function getQuestionAndResponse(id) {
   let response = []
-  for (const res of json.responses) {
+  for (const res of json.responses) { // Loop through all responses
+    // [questionHeading, answerText] will be pushed to response for each entry
     let qHeading, aText;
+
+    // if response id matches input id
     if (res.id === String(id)) {
-      let qaPairs = res.answers;
-      let qId, cId;
+      let qaPairs = res.answers; // array of objects that has 'question' and 'answer' as keys, questionId and object (either choice:id or text:text pairs) as values
+      let qId, cId; // questionId and choiceId
+
+      // Loop through each quesntion/answer pair
       for (let qa of qaPairs) {
-        qId = qa.question;
-        if (qa.answer.choice) {
-          cId = qa.answer.choice
+        qId = qa.question; // store questionId in qId
+        if (qa.answer.choice) { // if the answer has 'choice' as key
+          cId = qa.answer.choice // store id in cId
         } else {
-          aText = qa.answer.text
+          aText = qa.answer.text // store text in aText
         }
         
         for (const q of json.questions) {
-          if (q.id == qId) {
-            qHeading = q.heading;
-            if (q.options && cId) {
+          if (q.id == qId) { // if current question.id matches questionId from answer
+            qHeading = q.heading; // store question heading in qHeading
+            if (q.options && cId) { // if current question has options and there is a choice Id from answer
+              // find the option that matches the choiceId and store the text value in aText
               for (const o of q.options) {
                 if (o.id === cId) {
-                  aText = o.text;
+                  aText = o.text; 
                 }
               }
             }
           }
-
         }
+
+        // push [question heading, answer text] to response
         response.push([qHeading, aText])
       }
-      
     }
-    
   }
   
   return response
