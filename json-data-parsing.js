@@ -12,7 +12,7 @@ const json = {
       "heading": "What's your favorite food?"
     }
   ],
-  responses: [
+  "responses": [
     {
       "id": '1',
       "answers": [{"question": '1', "answer": {"choice": "1"}}, {"question": '2', "answer": {"text": "ice cream"}}]
@@ -82,3 +82,44 @@ console.log(getQuestionAndResponse(1))
 console.log(getQuestionAndResponse(2))
 console.log(getQuestionAndResponse(3))
 console.log(getQuestionAndResponse(4))
+
+
+// what if I want to get all entries for a question? 
+// return an obj with person Id being key and [questionHeading, answerText] and value
+function getResponsesForQuestion(id) {
+  let currentQuestionHeading, currentQuestionChoices;
+  for (const q of json.questions) {
+    if (q.id === String(id)) {
+      currentQuestionHeading = q.heading;
+      if (q.options) {
+        currentQuestionChoices = q.options; // [{"id": '1', "text": "good"}, {"id": '2', "text": "ok"}, {"id": '3', "text": "not great"}]
+      }
+    }
+  }
+  let responses = {};
+  
+  // Loop through all responses(each person) from json.responses
+  for (const person of json.responses) {
+    for (const qa of person.answers) { // check each question/answer by this person
+      if (qa.question === String(id)) {
+        let personId = person.id;
+        let answerText;
+        if (qa.answer.choice) { // if qa.answer has 'choice'
+          // find the option that matches id with id from answer
+          for (const option of currentQuestionChoices) {
+            if (option.id === qa.answer.choice) {
+              answerText = option.text; // assign option text to answerText
+            }
+          }
+        } else {
+          answerText = qa.answer.text 
+        }
+        responses[personId] = [currentQuestionHeading, answerText]
+      }
+    }
+  }
+  return responses
+}
+
+console.log(getResponsesForQuestion(1))
+console.log(getResponsesForQuestion(2))
