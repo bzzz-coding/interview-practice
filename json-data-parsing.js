@@ -39,30 +39,30 @@ function getQuestionAndResponse(id) {
   let response = {}
   for (const res of json.responses) { // Loop through all responses
     // [questionHeading, answerText] will be pushed to response for each entry
-    let qHeading, aText;
+    let questionHeading, answerText;
 
     // if response id matches input id
     if (res.id === String(id)) {
-      let qaPairs = res.answers; // array of objects that has 'question' and 'answer' as keys, questionId and object (either choice:id or text:text pairs) as values
-      let qId, cId; // questionId and choiceId
+      let questionAnswerPairs = res.answers; // array of objects that has 'question' and 'answer' as keys, questionId and object (either choice:id or text:text pairs) as values
+      let questionId, choiceId; // questionId and choiceId
 
       // Loop through each quesntion/answer pair
-      for (let qa of qaPairs) {
-        qId = qa.question; // store questionId in qId
-        if (qa.answer.choice) { // if the answer has 'choice' as key
-          cId = qa.answer.choice // store id in cId
+      for (let questionAnswer of questionAnswerPairs) {
+        questionId = questionAnswer.question; // store questionId in questionId
+        if (questionAnswer.answer.choice) { // if the answer has 'choice' as key
+          choiceId = questionAnswer.answer.choice // store id in choiceId
         } else {
-          aText = qa.answer.text // store text in aText
+          answerText = questionAnswer.answer.text // store text in answerText
         }
         
-        for (const q of json.questions) {
-          if (q.id == qId) { // if current question.id matches questionId from answer
-            qHeading = q.heading; // store question heading in qHeading
-            if (q.options && cId) { // if current question has options and there is a choice Id from answer
-              // find the option that matches the choiceId and store the text value in aText
-              for (const o of q.options) {
-                if (o.id === cId) {
-                  aText = o.text; 
+        for (const question of json.questions) {
+          if (question.id == questionId) { // if current question.id matches questionId from answer
+            questionHeading = question.heading; // store question heading in questionHeading
+            if (question.options && choiceId) { // if current question has options and there is a choice Id from answer
+              // find the option that matches the choiceId and store the text value in answerText
+              for (const option of question.options) {
+                if (option.id === choiceId) {
+                  answerText = option.text; 
                 }
               }
             }
@@ -70,7 +70,7 @@ function getQuestionAndResponse(id) {
         }
 
         // push [question heading, answer text] to response
-        response[qId] = [qHeading, aText]
+        response[questionId] = [questionHeading, answerText]
       }
     }
   }
@@ -100,19 +100,19 @@ function getResponsesForQuestion(id) {
   
   // Loop through all responses(each person) from json.responses
   for (const person of json.responses) {
-    for (const qa of person.answers) { // check each question/answer by this person
-      if (qa.question === String(id)) {
+    for (const questionAnswer of person.answers) { // check each question/answer by this person
+      if (questionAnswer.question === String(id)) {
         let personId = person.id;
         let answerText;
-        if (qa.answer.choice) { // if qa.answer has 'choice'
+        if (questionAnswer.answer.choice) { // if questionAnswer.answer has 'choice'
           // find the option that matches id with id from answer
           for (const option of currentQuestionChoices) {
-            if (option.id === qa.answer.choice) {
+            if (option.id === questionAnswer.answer.choice) {
               answerText = option.text; // assign option text to answerText
             }
           }
         } else {
-          answerText = qa.answer.text 
+          answerText = questionAnswer.answer.text 
         }
         responses[personId] = [currentQuestionHeading, answerText]
       }
