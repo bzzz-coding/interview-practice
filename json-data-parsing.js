@@ -32,7 +32,7 @@ const json = {
   ]
 }
 
-
+// Challenge: What is person(response)1's answers to each question? Return in the format of {1: ["How is your day?", "good"], 2: ["What's your favorite food?", "ice cream"]}
 
 // Pass in id of response, return an object with questionId: [question heading, answer text] pairs from the entry
 function getQuestionAndResponse(id) {
@@ -85,7 +85,7 @@ console.log(getQuestionAndResponse(4))
 
 
 // what if I want to get all entries for a question? 
-// return an obj with person Id being key and [questionHeading, answerText] and value
+// return an obj with person Id being key and [questionHeading, answerText] as value
 function getResponsesForQuestion(id) {
   let currentQuestionHeading, currentQuestionChoices;
   for (const q of json.questions) {
